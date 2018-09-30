@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         LinkedIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "You are already logged in",Toast.LENGTH_SHORT).show();
+                init();
             }
         });
 
@@ -61,16 +61,97 @@ public class MainActivity extends AppCompatActivity {
 
 
 //
-//        computePakageHash();
-//        init();
+//        computePakageHash(); //Have upfated on linkedin developer portal.
+        init();
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Add this line to your existing onActivityResult() method
+        LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+    }
 
-//
-//    public void print(String s) {
-//        Toast.makeText(this,s, Toast.LENGTH_LONG).show();
-//    }
+    // Build the list of member permissions our LinkedIn session requires
+    private static Scope buildScope() {
+        return Scope.build(Scope.R_BASICPROFILE, Scope.W_SHARE, Scope.R_EMAILADDRESS);
+    }
+
+    private void init() {
+        print("Already logged In");
+        handleLogin();
+    }
+
+    private void handleLogin() {
+        LISessionManager.getInstance(getApplicationContext()).init(this, buildScope(), new AuthListener() {
+            @Override
+            public void onAuthSuccess() {
+                // Authentication was successful.  You can now do
+                // other calls with the SDK.
+
+
+                fetchPersonalInfo();
+            }
+
+            @Override
+            public void onAuthError(LIAuthError error) {
+                Log.e("GAURAV", error.toString());
+            }
+        }, true);
+    }
+
+    private void handleLogout(){
+        LISessionManager.getInstance(getApplicationContext()).clearSession();
+    }
+
+    private void fetchPersonalInfo() {
+        String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name,picture-url,email-Address)?format=json";
+
+        final APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
+        apiHelper.getRequest(this, url, new ApiListener() {
+            @Override
+            public void onApiSuccess(ApiResponse apiResponse) {
+                // Success!
+                try {
+                    JSONObject jsonObject = apiResponse.getResponseDataAsJson();
+                    String firstName = jsonObject.getString("firstName");
+                    String lastName = jsonObject.getString("lastName");
+                    String pictureURL = jsonObject.getString("pictureUrl");
+                    String emailAddress = jsonObject.getString("emailAddress");
+
+                    //Picasso.with(getApplicationContext()).load(pictureURL).into(piv);
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("Resume - ");
+                    stringBuilder.append("\n\n");
+                    stringBuilder.append("First Name: " +firstName);
+                    stringBuilder.append("\n\n");
+                    stringBuilder.append("Last Name: " +lastName);
+                    stringBuilder.append("\n\n");
+                    stringBuilder.append("Email Address: " +emailAddress);
+                    stringBuilder.append("\n\n");
+                    stringBuilder.append("Education Details: " +emailAddress);
+
+                    String message = stringBuilder.toString();
+
+                    //txtDetails.setText(stringBuilder);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onApiError(LIApiError liApiError) {
+                // Error making GET request!
+                Log.e("XYZ", liApiError.getMessage());
+            }
+        });
+    }
+
+
+    public void print(String s) {
+        Toast.makeText(this,s, Toast.LENGTH_LONG).show();
+    }
 
 
 }
