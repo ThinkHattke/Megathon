@@ -56,34 +56,8 @@ public class ChatBot extends AppCompatActivity {
                 final String inputText = userInput.getText().toString();
                 if(inputText.equals("yes")|| inputText.equals("yup") || inputText.equals("sure")){
                     print("Loading...");
-                    String finalMessage = getLinkedData();
 
-                    MessageRequest mrequest = new MessageRequest.Builder()                           //Starting connection with IBM Waston and passing the input.
-                            .inputText(finalMessage)
-                            .build();
 
-                    myCoversationServices
-                            .message(String.valueOf(R.string.workspace),mrequest)
-                            .enqueue(new ServiceCallback<MessageResponse>() {
-                                @Override
-                                public void onResponse(MessageResponse response) {
-                                    final String outputText = response.getText().get(0);
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            conversation.append(
-
-                                                    android.text.Html.fromHtml("<p><b>Bot:</b> " + outputText + "</p")    //Displaying the output to user.
-                                            );
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-
-                                }
-                            });
                 }
                 conversation.append(
                         android.text.Html.fromHtml("<p><Strong><font color=#cc0029>You:<Strong> " + inputText + "</font></p>")       //Extracting the User input
@@ -91,7 +65,7 @@ public class ChatBot extends AppCompatActivity {
 
                 userInput.setText("");                                                       //Resetting the input area
 
-                MessageRequest request = new MessageRequest.Builder()                           //Starting connection with IBM Waston and passing the input.
+                final MessageRequest request = new MessageRequest.Builder()                           //Starting connection with IBM Waston and passing the input.
                         .inputText(inputText)
                         .build();
 
@@ -113,7 +87,34 @@ public class ChatBot extends AppCompatActivity {
                                     }
                                 });
 
+                                if (response.getEntities().get(0).getEntity().equals("surity") || response.getIntents().get(0).getIntent().equals("okay")){
+                                    MessageRequest mrequest = new MessageRequest.Builder()                           //Starting connection with IBM Waston and passing the input.
+                                            .inputText(outputText)
+                                            .build();
 
+                                    myCoversationServices
+                                            .message(String.valueOf(R.string.workspace),mrequest)
+                                            .enqueue(new ServiceCallback<MessageResponse>() {
+                                                @Override
+                                                public void onResponse(MessageResponse response) {
+                                                    final String outputText = response.getText().get(0);
+                                                    runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            conversation.append(
+
+                                                                    android.text.Html.fromHtml("<p><b>Bot:</b> " + outputText + "</p")    //Displaying the output to user.
+                                                            );
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onFailure(Exception e) {
+
+                                                }
+                                            });
+                                }
 
                             }
 
@@ -212,34 +213,5 @@ public class ChatBot extends AppCompatActivity {
         });
     }
 
-    private String getLinkedData() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("First Name: " +"Gaurav");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Last Name: " +"Rai");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Email Address: " +"gauravrai568@gmail.com");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Education Details: " +"Graduation SRM University");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Experience: " +"2 yrs");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Professional Deatils: " +"Android Developer");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Applied Profile: " +"Data Science");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Total Achievements: " +"11");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Related Achievements: " +"1");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Achievement: " +"Naari - Women safety app");
-        stringBuilder.append("Related Achievements: " +"1");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Language: " +"English");
-
-        String finalData = stringBuilder.toString();
-
-        return finalData;
-    }
 
 }
