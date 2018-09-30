@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="ebonyclay">#22313F</color>
+    <color name="summersky">#26acf1</color>
+    <color name="black">#000000</color>
+    <color name="voilet">#7D43EE</color>
+    <color name="blue">#667EEA</color>
+    <color name="buttonStart">#667EEA</color>
+    <color name="buttonEnd">#754DA5</color>
+    <color name="hintGrey">#9A9A9A</color>
+    <color name="white">#FFFFFF</color>
+    <color name="green">#8BC34A</color>
+    <color name="red">#F5594E</color>
+    <color name="orange">#FB8C00</color>
+    <color name="lightGrey">#F2F2F2</color>
+    <color name="golden">#EFA248</color>
+    <color name="textGrey">#707070</color>
+    <color name="lightblue">#2bbefc</color>
+    <color name="light_green">#9fe6be</color>
+    <color name="lightgrey">#B2BABB </color>
+    <color name="rolecolor">#7b7b7b</color>
+    <color name="lowgray">#d1dcdc</color>
+    <color name="message_back">#eeeeee</color>
+    <color name="light_blue">#c0dfff</color>
+    <color name="blue_light">#4895ef</color>
+    <color name="blue_bright">#004d99</color>
+    <color name="message">#898989</color>
+    <color name="comment_highlight">#E5EDF4</color>
+</resources>
